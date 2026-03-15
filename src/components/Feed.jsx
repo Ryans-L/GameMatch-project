@@ -1,6 +1,7 @@
 import React from "react";
 import { UserAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import NavigationBar from "./NavigationBar";
 
 const Feed = () => {
     const { session, signOutUser } = UserAuth();
@@ -17,17 +18,26 @@ const Feed = () => {
         }
     }
     return (
-        <div>
-            <h1 className="pt-10 text-center text-[100px]">Feed</h1>
-            <h2>
-                Welcome, {session?.user?.email}
-            </h2>
-            <div>
-                <button onClick={handleSignOut} className="m-6 p-3 hover:cursor-pointer border rounded-full ">
+        <>
+            <NavigationBar />
+            
+        <div className="text-center pt-100">
+            <h1 className="text-9xl flex gap-4 justify-center flex-wrap"> HOME PAGE </h1>
+            <h2 className="mb-8"> Welcome, {session?.user?.email}!</h2>
+
+            <div className="flex gap-4 justify-center flex-wrap">
+                <button onClick={() => navigate("/create-post")}
+                className="m-2 p-3 border rounded-full" > Create Post </button>
+                <button onClick={() => navigate("/posts")}
+                className="m-2 p-3 border rounded-full" >
+                    View Posts
+                </button>
+                <button onClick={handleSignOut} className="m-2 p-3 border rounded-full">
                     Sign Out
                 </button>
             </div>
         </div>
+        </>
     )
 }
 

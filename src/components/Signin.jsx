@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { Link, useNavigate } from "react-router-dom";
 import { UserAuth } from "../context/AuthContext";
-
+import NavigationBar from "./NavigationBar";
 
 const SignIn = () => {
     const [email, setEmail] = useState("");
@@ -30,6 +30,8 @@ const SignIn = () => {
     };
 
     return (
+        <>
+        <NavigationBar/>
         <div className="bg-purple-100 m-8">
             <form name="SignIn" id="SignIn" onSubmit={handleSignIn} className="max-w-md m-auto pt-8">
                 <h2 className="text-black text-center">
@@ -46,6 +48,7 @@ const SignIn = () => {
                     Don't Have an Account? <Link to="/signup" className="text-blue-800">Create Account</Link>
             </p>
         </div>
+        </>
     )
 }
 
