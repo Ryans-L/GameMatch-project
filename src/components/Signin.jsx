@@ -7,7 +7,7 @@ const SignIn = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
-    const [loading, setLoading] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
     const { session, signInUser } = UserAuth();
@@ -15,15 +15,19 @@ const SignIn = () => {
   
     const handleSignIn = async (e) => {
         e.preventDefault();
+        setError("");
         setLoading(true);
         try{
             const result = await signInUser(email, password)
 
-            if(result.success){
+            if(result?.success){
                 navigate("/feed")
-            } 
-        } catch(err){
-            setError("an error occured")
+            } else {
+                setError(result?.error || "Failed to sign in")
+            }
+        } catch(error){
+            console.error("Sign in error:", error);
+            return { success: false, error: "An unexpected error occurred during sign in." };
         } finally {
             setLoading(false)
         }

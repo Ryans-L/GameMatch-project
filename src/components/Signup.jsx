@@ -4,10 +4,11 @@ import { UserAuth } from "../context/AuthContext";
 import NavigationBar from "./NavigationBar";
 
 const Signup = () => {
+    const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
-    const [loading, setLoading] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
     const { session, signUpNewUser } = UserAuth();
@@ -17,13 +18,16 @@ const Signup = () => {
         e.preventDefault();
         setLoading(true);
         try{
-            const result = await signUpNewUser(email, password)
+            const result = await signUpNewUser(email, password, username);
 
             if(result.success){
                 navigate("/feed")
-            } 
-        } catch(err){
-            setError("an error occured")
+            } else {
+                setError(result.error || "An error occurred during sign up.");
+            }
+        } catch(error) {
+            console.error("Sign up error:", error);
+            return { success: false, error: "An unexpected error occurred during sign up." };
         } finally {
             setLoading(false)
         }
@@ -39,6 +43,7 @@ const Signup = () => {
                     Sign up!
                 </h2>
                 <div>
+                    <input onChange={(e) => setUsername(e.target.value)} type="text" placeholder="Username" className="text-black bg-white p-2 mt-6 w-full"/>
                     <input onChange={(e) => setEmail(e.target.value)} type="email" placeholder="Email" className="text-black bg-white p-2 mt-6 w-full"/>
                     <input onChange={(e) => setPassword(e.target.value)}  type="password" placeholder="Password" className="text-black bg-white p-2 mt-6 w-full"/>
                 </div>

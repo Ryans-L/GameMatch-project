@@ -25,10 +25,15 @@ const CreatePost = () => {
                 setLoading(false);
                 return;
             }
+
+            const { data: profile } = await supabase.from("profiles").select("username, avatar_url").eq("id", session.user.id).single();
+
             const { error } = await supabase.from("posts").insert([
                 {
                     user_id: session.user.id,
                     email: session.user.email,
+                    username: profile?.username || null,
+                    avatar_url: profile?.avatar_url || null,
                     title,
                     content,
                 },
