@@ -27,12 +27,15 @@ const Feed = () => {
 
             <div className="flex gap-4 justify-center flex-wrap">
                 <button onClick={() => navigate("/create-post")}
-                className="m-2 p-3 border rounded-full" > Create Post </button>
+                className="m-2 p-3 border rounded-full cursor-pointer" > Create Post </button>
                 <button onClick={() => navigate("/posts")}
-                className="m-2 p-3 border rounded-full" >
+                className="m-2 p-3 border rounded-full cursor-pointer" >
                     View Posts
                 </button>
-                <button onClick={handleSignOut} className="m-2 p-3 border rounded-full">
+                <button onClick={() => navigate("/profile")} className="m-2 p-3 border rounded-full cursor-pointer">
+                    My Profile
+                </button>
+                <button onClick={handleSignOut} className="m-2 p-3 border rounded-full cursor-pointer">
                     Sign Out
                 </button>
             </div>

@@ -8,7 +8,7 @@ function App() {
   return (
     <>
       <NavigationBar />
-      <div className="text-cetner pt-10">
+      <div className="text-center pt-10">
         <h1 className="text-white text-5xl mb-6 text-center"> GameMatch </h1>
         <p className="text-white mb-8 text-center"> Welcome to the app! </p>
 
