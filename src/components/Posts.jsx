@@ -22,7 +22,23 @@ const Posts = () => {
         setLoading(true);
         setError(null);
         const {data, error } = await supabase.from("posts")
-            .select(`*,likes (id),comments (id,content,created_at,user_id,profiles (username,avatar_url))`).order("created_at", { ascending: false });
+            .select(`
+                *,
+                likes (
+                id,
+                user_id
+                ),
+                comments (
+                id,
+                content,
+                created_at,
+                user_id,
+                profiles (
+                username,
+                avatar_url
+                )
+                )
+                `)
         if (error) {
             setError("Error fetching posts: " + error.message);
         } 
@@ -41,14 +57,13 @@ const Posts = () => {
   };
 
   const handleToggleLike = async (post) => {
+    //posts is a private route should never happen but just in case
     if (!session?.user) {
       setError("You must be logged in to like a post.");
       return;
     }
 
-    const alreadyLiked = post.likes?.some(
-      (like) => like.user_id === session.user.id
-    );
+    const alreadyLiked =  (post.likes || []).some((like) => like.user_id === session.user.id);
 
     if (alreadyLiked) {
       const { error } = await supabase
@@ -57,11 +72,12 @@ const Posts = () => {
         .eq("post_id", post.id)
         .eq("user_id", session.user.id);
 
-      if (error) {
+        if (error) {
         setError("Error removing like: " + error.message);
         return;
-      }
-    } else {
+        }
+    } 
+    else {
       const { error } = await supabase
         .from("likes")
         .insert([
@@ -142,7 +158,7 @@ return (
                             <p className="text-gray-700 mb-4">{post.content}</p>
                             <p className="text-sm text-gray-500">By: {post.username || post.email} on {new Date(post.created_at).toLocaleString()}</p>
                             <div className="flex items-center gap-4 mb-4">
-                                <button onClick={() => handleToggleLike(post)} className="px-3 py-2 border rounded text-gray-500"> Like </button>
+                                <button onClick={() => handleToggleLike(post)} className="px-3 py-2 border rounded text-gray-500 cursor-pointer"> {hasLikedPost(post) ? "Unlike": "Like"} </button>
                                 <span className="text-gray-500">{post.likes?.length || 0} ❤️</span>
                             </div>
 
@@ -167,7 +183,7 @@ return (
 
                             <div className="flex gap-2">
                             <input type="text" placeholder="Write a comment..." value={commentInput[post.id] || ""} onChange={(e) => setCommentInput((prev) => ({...prev,[post.id]: e.target.value,}))}className="flex-1 border p-2 rounded text-gray-500" />
-                            <button onClick={() => handleAddComment(post)} className="px-3 py-2 border rounded"> Post </button>
+                            <button onClick={() => handleAddComment(post)} className="px-3 py-2 border rounded text-gray-500 cursor-pointer" > Post </button>
                             </div>
                         </div> ))}
                         {!loading && posts.length === 0 && (<p className="text-center">No posts found.</p>)}
