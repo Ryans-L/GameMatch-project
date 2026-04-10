@@ -8,10 +8,11 @@ const CreatePost = () => {
     const { session } = UserAuth();
     const navigate = useNavigate();
 
+    // Local form + request state
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
-    const [ error, setError] = useState(null);
-    const [ loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
     
     const handleSubmitPost = async (e) => {
         e.preventDefault();
@@ -19,15 +20,21 @@ const CreatePost = () => {
         setLoading(true);
 
         try{
-            if (!session?.user)
-            {
+            // only signed-in users can create posts
+            if (!session?.user) {
                 setError("You must be logged in to create a post.");
                 setLoading(false);
                 return;
             }
 
-            const { data: profile } = await supabase.from("profiles").select("username, avatar_url").eq("id", session.user.id).single();
+            // Pull username/avatar from profiles table for denormalized post display
+            const { data: profile } = await supabase
+                .from("profiles")
+                .select("username, avatar_url")
+                .eq("id", session.user.id)
+                .single();
 
+            // Insert new post row
             const { error } = await supabase.from("posts").insert([
                 {
                     user_id: session.user.id,
@@ -41,17 +48,15 @@ const CreatePost = () => {
 
             if (error) {
                 setError("Error creating post: " + error.message);
-                console.error("Error inserting post:", error);
-            } 
-            else {
+            } else {
+                // Navigate to feed of posts after successful creation
                 navigate("/posts");
             }
-            } catch (error) {
-                setError("An error occurred: " + error.message);
-                console.error("error:", error);
-            } finally {
-                setLoading(false);
-            }
+        } catch (error) {
+            setError("An error occurred: " + error.message);
+        } finally {
+            setLoading(false);
+        }
 };
 
     return (

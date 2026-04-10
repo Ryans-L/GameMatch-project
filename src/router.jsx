@@ -9,11 +9,13 @@ import Posts from "./components/Posts";
 import Profile from "./components/Profile";
 
 export const router = createBrowserRouter([
-    {path: "/", element: <App />},
-    {path: "/signup", element: <Signup />},
-    {path: "/signin", element: <Signin />},
-    {path: "/feed", element: (<PrivateRoute> <Feed /> </PrivateRoute>),},
-    {path: "/create-post", element: (<PrivateRoute> <CreatePost/> </PrivateRoute>) },
-    {path: "/posts", element: (<PrivateRoute> <Posts/> </PrivateRoute>) },
-    {path: "/profile", element: (<PrivateRoute> <Profile/> </PrivateRoute>) },
+    { path: "/", element: <App /> },
+    { path: "/signup", element: <Signup /> },
+    { path: "/signin", element: <Signin /> },
+
+    // Protected routes (must be authenticated)
+    { path: "/feed", element: (<PrivateRoute><Feed /></PrivateRoute>) },
+    { path: "/create-post", element: (<PrivateRoute><CreatePost /></PrivateRoute>) },
+    { path: "/posts", element: (<PrivateRoute><Posts /></PrivateRoute>) },
+    { path: "/profile", element: (<PrivateRoute><Profile /></PrivateRoute>) },
 ]);
