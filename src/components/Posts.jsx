@@ -18,6 +18,12 @@ const Posts = () => {
         return data.publicUrl;
     };
 
+    const getImagePublicUrl = (path) => {
+        if (!path) return null;
+        const { data } = supabase.storage.from("post-images").getPublicUrl(path);
+        return data.publicUrl;
+    };
+
     const fetchPosts = async () => {
         setLoading(true);
         setError(null);
@@ -139,7 +145,13 @@ return (
 
                             {/* Post content */}
                             <h2 className="text-black text-2xl font-bold mb-2">{post.title}</h2>
+                            <p className="text-sm text-blue-500">Console: {post.console}</p>
                             <p className="text-gray-700 mb-4">{post.content}</p>
+                            {/* Optional post image */}
+                            {post.image_url && (
+                                <img src={getImagePublicUrl(post.image_url)} alt="post image" className="w-full max-h-96 object-cover mb-4"/>
+                            )}
+        
                             <p className="text-sm text-gray-500">By: {post.username || post.email} on {new Date(post.created_at).toLocaleString()}</p>
 
                             {/* Like actions and count */}
