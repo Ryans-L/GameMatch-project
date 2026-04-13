@@ -13,7 +13,7 @@ const Posts = () => {
 
     const getAvatarPublicUrl = (path) => {
         if (!path) return "";
-        // Convert Supabase storage file path -> public URL
+        // Convert Supabase storage file path to public URL
         const { data } = supabase.storage.from("avatars").getPublicUrl(path);
         return data.publicUrl;
     };
@@ -37,7 +37,7 @@ const Posts = () => {
                   id, content, created_at, user_id,
                   profiles ( username, avatar_url )
                 )
-            `);
+            `).order("created_at", { ascending: false }); // newest first
 
         if (error) setError("Error fetching posts: " + error.message);
         else setPosts(data);
