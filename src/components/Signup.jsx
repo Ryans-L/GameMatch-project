@@ -21,8 +21,15 @@ const Signup = () => {
         setError("");
         setLoading(true);
 
+        const normalizedEmail = email.trim().toLowerCase();
+        if (!/^[^\s@]+@[^\s@]+\.edu$/i.test(normalizedEmail)) {
+            setError("Must use a .edu email address to sign up.");
+            setLoading(false);
+            return;
+        }
+
         try {
-            const result = await signUpNewUser(email, password, username);
+            const result = await signUpNewUser(normalizedEmail, password, username);
 
             if (result.success) {
                 // Successful signup -> go to feed
@@ -60,7 +67,7 @@ const Signup = () => {
                         <input
                             onChange={(e) => setEmail(e.target.value)}
                             type="email"
-                            placeholder="Email"
+                            placeholder="School email (.edu)"
                             className="text-black bg-white p-2 mt-6 w-full"
                         />
 
