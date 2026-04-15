@@ -9,7 +9,12 @@ export const AuthContextProvider = ({children}) => {
 
     // Create auth user, then create/update profile row
     const signUpNewUser = async (email, password, username) => {
-        const {data, error} = await supabase.auth.signUp({email, password});
+        const normalizedEmail = email.trim().toLowerCase();
+        if (!/^[^\s@]+@[^\s@]+\.edu$/i.test(normalizedEmail)) {
+            return { success: false, error: "Must use a .edu email address to sign up." };
+        }
+
+        const {data, error} = await supabase.auth.signUp({ email: normalizedEmail, password });
 
         if(error) {
             console.error("Problem Signing up:", error);
